@@ -1,2 +1,3 @@
-# homework-6
-Homework 6 description and files
+# Homework-6: Thermal Energy Balance
+
+## Suggested Due Date: Before midnight on Tuesday, December 8.
