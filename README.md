@@ -1,6 +1,6 @@
 # Homework-6: Thermal Energy Balance
 
-## Suggested Due Date: Before midnight on Thursday, December 10.
+## Suggested Due Date: Before midnight on Wednesday, December 9.
 
 While there are several model files that you will need to read and undestand in order to successfully complete this assignment, there are only two files where you need to make changes:
 
