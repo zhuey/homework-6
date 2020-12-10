@@ -44,15 +44,16 @@ def residual(t, SV, pars, ptr, flags):
     CALCULATE TERMS FOR VOLUMETRIC THERMAL ENERGY PRODUCTION (W/m3)
     """
     # Conduction heat transfer from the anode to the electrolyte separator:
-    Q_cond_an = 0
+    Q_cond_an = -lambda_an * (SV[ptr.T_elyte] - SV[ptr.T_an])  * dyInv_an
 
     # Volumetric heat source/sink terms: (W/m3)
-    Q_rxn = 0
-    Q_ohm_el = 0
-    Q_ohm_io = 0
-    Q_cond = 0
-    Q_rad = 0
-    Q_conv = 0
+    Q_rxn = -sum(sdot_k * energy_k)
+    Q_ohm_el = i_Far_an**2 * pars.R_el_an
+    Q_ohm_io = pars.i_ext**2  * pars.R_io_an  
+    Q_cond = - Q_cond_an / pars.H_an
+    Q_rad = sigma * pars.emmissivity * (pars.T_amb**4 - SV[ptr.T_an]**4) * pars.A_ext
+    Q_conv = pars.h_conv * pars.A_ext * (pars.T_amb - SV[ptr.T_an])
+    
     """
     END CODING
     """
@@ -76,13 +77,13 @@ def residual(t, SV, pars, ptr, flags):
     CALCULATE TERMS FOR VOLUMETRIC THERMAL ENERGY PRODUCTION (W/m3)
     """
     # Conduction heat transfer from the electrolyte separator to the cathode:
-    Q_cond_ca = 0
+    Q_cond_ca = -lambda_ca * (SV[ptr.T_ca] - SV[ptr.T_elyte]) * dyInv_ca 
 
     # Volumetric heat source/sink terms: (W/m3)
     Q_rxn = 0
     Q_ohm_el = 0
-    Q_ohm_io = 0
-    Q_cond = 0
+    Q_ohm_io = pars.i_ext**2 * pars.R_io_elyte
+    Q_cond = -(-Q_cond_an + Q_cond_ca) / pars.H_elyte
     Q_rad = 0
     Q_conv = 0
     """
@@ -119,12 +120,12 @@ def residual(t, SV, pars, ptr, flags):
     
     CALCULATE TERMS FOR VOLUMETRIC THERMAL ENERGY PRODUCTION (W/m3)
     """
-    Q_rxn = 0
-    Q_ohm_el = 0
-    Q_ohm_io = 0
-    Q_cond = 0
-    Q_rad = 0
-    Q_conv = 0
+    Q_rxn = - sum(sdot_k * energy_k)
+    Q_ohm_el = i_Far_ca**2 * pars.H_an * pars.R_el_ca
+    Q_ohm_io = pars.i_ext**2 * pars.R_io_ca
+    Q_cond = Q_cond_ca / pars.H_ca
+    Q_rad = sigma * pars.emmissivity * (pars.T_amb**4 - SV[ptr.T_ca]**4) * pars.A_ext
+    Q_conv = pars.h_conv * pars.A_ext * (pars.T_amb - SV[ptr.T_ca])
     """
     END CODING
     """
